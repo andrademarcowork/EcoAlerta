@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EcoAlerta - Plataforma colaborativa de sustentabilidade, cidadania e monitoramento ambiental urbano.">
+    <title>EcoAlerta — Plataforma Web de Sustentabilidade e Cidadania</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">🌱</span>
+                <span class="logo-text">Eco<span class="logo-highlight">Alerta</span></span>
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="#hero" class="nav-link active">Início</a></li>
+                    <li><a href="#como-funciona" class="nav-link">Como Funciona</a></li>
+                    <li><a href="#categorias" class="nav-link">Ocorrências</a></li>
+                    <li><a href="#mapa-section" class="nav-link">Mapa</a></li>
+                    <li><a href="#sobre" class="nav-link">Sobre</a></li>
+                </ul>
+            </nav>
+            
+            <button class="btn btn-primary nav-cta" id="nav-btn-registrar">
+                <span>📸</span> Registrar Problema
+            </button>
+            
+            <button class="mobile-toggle" aria-label="Abrir Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+    <main>
+        <!-- Seção Principal / Hero -->
+        <section class="hero" id="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <span class="badge">🌱 Cidadania e Sustentabilidade</span>
+                    <h1 class="hero-title">Transforme sua cidade cuidando do <span class="gradient-text">meio ambiente</span></h1>
+                    <p class="hero-description">
+                        Identifique, fotografe e registre problemas ambientais e urbanos na sua comunidade. 
+                        Juntos, criamos um mapa vivo para cobrar soluções e proteger nosso espaço urbano.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#registrar" class="btn btn-primary btn-lg" id="btn-hero-registrar">
+                            <span>📸</span> Registrar um problema
+                        </a>
+                        <a href="#mapa-section" class="btn btn-outline btn-lg" id="btn-hero-mapa">
+                            <span>🗺️</span> Ver problemas no mapa
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Colaborativo</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Monitoramento</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">Cidadão</span>
+                            <span class="stat-label">Voz Ativa</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-card-preview">
+                    <div class="glass-card preview-card">
+                        <div class="preview-badge">📍 Ocorrência em Destaque</div>
+                        <div class="preview-img-placeholder">
+                            <span>📸 Fotografia do Problema</span>
+                        </div>
+                        <div class="preview-body">
+                            <h3>Descarte Irregular de Resíduos</h3>
+                            <p class="preview-location">📍 Rua das Flores, Centro</p>
+                            <div class="preview-status status-registrado">🟡 Registrado</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Seção Como Funciona -->
+        <section class="section como-funciona" id="como-funciona">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Como Funciona</h2>
+                    <p class="section-subtitle">Em apenas 4 passos simples você ajuda a melhorar a sua cidade</p>
+                </div>
+                
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-icon">1</div>
+                        <div class="step-content">
+                            <h3>Encontre o Problema</h3>
+                            <p>Identifique acúmulo de lixo, vazamentos, bueiros entupidos ou outros riscos ambientais.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">2</div>
+                        <div class="step-content">
+                            <h3>Fotografe e Localize</h3>
+                            <p>Tire uma foto e ative a geolocalização do seu celular para capturar a posição exata.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">3</div>
+                        <div class="step-content">
+                            <h3>Descreva e Envie</h3>
+                            <p>Adicione detalhes importantes sobre a situação e envie seu registro com 1 clique.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">4</div>
+                        <div class="step-content">
+                            <h3>Acompanhe no Mapa</h3>
+                            <p>Veja sua ocorrência registrada no mapa público e acompanhe a resolução do problema.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Seção Tipos de Problemas -->
+        <section class="section categorias" id="categorias">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Tipos de Ocorrências</h2>
+                    <p class="section-subtitle">Categorias de problemas que podem ser registrados no EcoAlerta</p>
+                </div>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <div class="category-icon">🗑️</div>
+                        <h3>Lixo Acumulado</h3>
+                        <p>Descarte inadequado de resíduos sólidos e entulhos em vias públicas.</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">💧</div>
+                        <h3>Vazamento de Água</h3>
+                        <p>Vazamentos em tubulações, redes de água potável ou esgoto.</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🕳️</div>
+                        <h3>Bueiros Entupidos</h3>
+                        <p>Bueiros obstruídos com risco de causar alagamentos nas chuvas.</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🌊</div>
+                        <h3>Alagamentos</h3>
+                        <p>Pontos de acúmulo severo de água de chuva ou transbordamento.</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">⛰️</div>
+                        <h3>Erosão e Deslizamento</h3>
+                        <p>Barrancos cedendo, risco de encostas e erosão no solo.</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🌳</div>
+                        <h3>Árvores em Risco</h3>
+                        <p>Árvores caídas, galhos caídos ou risco de queda em fiação.</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🔥</div>
+                        <h3>Queimadas</h3>
+                        <p>Focos de incêndio em vegetações ou terrenos baldios.</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🏭</div>
+                        <h3>Poluição</h3>
+                        <p>Emissão inadequada de fumaça, resíduos tóxicos ou contaminação.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Seção do Mapa -->
+        <section class="section mapa-section" id="mapa-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Mapa de Ocorrências</h2>
+                    <p class="section-subtitle">Explore os problemas reportados na sua região em tempo real</p>
+                </div>
+                <div class="map-wrapper glass-card">
+                    <!-- Barra de Filtros por Categoria e Status -->
+                    <div class="map-filter-container">
+                        <div class="map-filter-header">
+                            <span class="filter-label">🔍 Filtrar no Mapa:</span>
+                            <span class="filter-counter-text" id="filter-counter-text">Exibindo <strong>3</strong> ocorrências</span>
+                        </div>
+                        <div class="map-filter-chips" id="map-filter-chips">
+                            <button class="filter-chip active" data-categoria="TODOS">🌐 Todas as Categorias</button>
+                            <button class="filter-chip" data-categoria="Lixo Acumulado">🗑️ Lixo Acumulado</button>
+                            <button class="filter-chip" data-categoria="Vazamento">💧 Vazamentos</button>
+                            <button class="filter-chip" data-categoria="Bueiro Entupido">🕳️ Bueiros</button>
+                            <button class="filter-chip" data-categoria="Alagamento">🌊 Alagamentos</button>
+                            <button class="filter-chip" data-categoria="Erosão / Deslizamento">⛰️ Erosão</button>
+                            <button class="filter-chip" data-categoria="Árvore em Risco">🌳 Árvores</button>
+                            <button class="filter-chip" data-categoria="Queimada">🔥 Queimadas</button>
+                            <button class="filter-chip" data-categoria="Poluição">🏭 Poluição</button>
+                            <button class="filter-chip filter-chip-status" data-status="Resolvido">🟢 Apenas Resolvidos</button>
+                        </div>
+                    </div>
+                    <div id="map" class="map-container"></div>
+                    <div class="map-legend">
+                        <div class="legend-item"><span class="badge-dot dot-registrado"></span> Registrado</div>
+                        <div class="legend-item"><span class="badge-dot dot-analise"></span> Em análise</div>
+                        <div class="legend-item"><span class="badge-dot dot-encaminhado"></span> Encaminhado</div>
+                        <div class="legend-item"><span class="badge-dot dot-resolvido"></span> Resolvido</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Seção Sobre o Projeto -->
+        <section class="section sobre" id="sobre">
+            <div class="container">
+                <div class="sobre-grid">
+                    <div class="sobre-content">
+                        <span class="badge">💚 Propósito</span>
+                        <h2 class="section-title">Sobre o EcoAlerta</h2>
+                        <p>
+                            O **EcoAlerta** é uma plataforma comunitária criada para conectar cidadãos e promover a sustentabilidade urbana. Acreditamos que a transformação das cidades começa com a participação ativa de cada morador.
+                        </p>
+                        <p>
+                            Nossa missão é dar visibilidade aos problemas socioambientais e urbanos, criando dados abertos e colaborativos para pressionar e apoiar melhorias contínuas.
+                        </p>
+                    </div>
+                    <div class="sobre-features">
+                        <div class="feature-box">
+                            <span class="feature-icon">🤝</span>
+                            <div>
+                                <h4>Participação Cidadã</h4>
+                                <p>Dê voz à sua comunidade e ajude a identificar prioridades no seu bairro.</p>
+                            </div>
+                        </div>
+                        <div class="feature-box">
+                            <span class="feature-icon">📊</span>
+                            <div>
+                                <h4>Transparência</h4>
+                                <p>Acompanhe o status e a evolução de cada problema reportado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <span class="logo-icon">🌱</span>
+                    <span class="logo-text">Eco<span class="logo-highlight">Alerta</span></span>
+                </a>
+                <p>Plataforma Web Colaborativa de Sustentabilidade e Cidadania.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="#hero">Início</a></li>
+                    <li><a href="#como-funciona">Como Funciona</a></li>
+                    <li><a href="#categorias">Categorias</a></li>
+                    <li><a href="#mapa-section">Mapa</a></li>
+                </ul>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 EcoAlerta. Todos os direitos reservados. Feito com foco na sustentabilidade.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Modal de Registro de Ocorrência -->
+    <div class="modal-overlay" id="modal-registro" aria-hidden="true">
+        <div class="modal-container glass-card">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <span class="modal-icon">📸</span>
+                    <h2>Registrar um Problema</h2>
+                </div>
+                <button class="modal-close" id="btn-fechar-modal" aria-label="Fechar Modal">&times;</button>
+            </div>
+            
+            <form id="form-ocorrencia" class="modal-form">
+                <!-- Tipo de Problema -->
+                <div class="form-group">
+                    <label for="tipo-problema" class="form-label">Tipo de Problema <span class="required">*</span></label>
+                    <select id="tipo-problema" name="tipo" class="form-select" required>
+                        <option value="" disabled selected>Selecione a categoria...</option>
+                        <option value="Lixo Acumulado">🗑️ Lixo Acumulado / Descarte Irregular</option>
+                        <option value="Vazamento">💧 Vazamento de Água / Esgoto</option>
+                        <option value="Bueiro Entupido">🕳️ Bueiro Entupido / Obstruído</option>
+                        <option value="Alagamento">🌊 Alagamento / Acúmulo de Água</option>
+                        <option value="Erosão / Deslizamento">⛰️ Erosão / Barranco Cedendo</option>
+                        <option value="Árvore em Risco">🌳 Árvore Caída / Risco de Queda</option>
+                        <option value="Queimada">🔥 Queimada / Foco de Incêndio</option>
+                        <option value="Poluição">🏭 Poluição Ambiental / Fumaça</option>
+                        <option value="Outro">📍 Outro Problema Urbano/Ambiental</option>
+                    </select>
+                </div>
+                <!-- Capture / Upload de Fotografia -->
+                <div class="form-group">
+                    <label class="form-label">Fotografia do Problema</label>
+                    <div class="photo-upload-container" id="photo-upload-area">
+                        <input type="file" id="foto-input" accept="image/*" capture="environment" class="photo-file-input">
+                        <div class="photo-placeholder" id="photo-placeholder">
+                            <span class="upload-icon">📸</span>
+                            <p class="upload-text"><strong>Clique para fotografar</strong> ou selecionar imagem</p>
+                            <span class="upload-hint">PNG, JPG até 5MB</span>
+                        </div>
+                        <div class="photo-preview-box hidden" id="photo-preview-box">
+                            <img id="foto-img-preview" src="" alt="Preview da Foto">
+                            <button type="button" class="btn-remove-photo" id="btn-remover-foto" title="Remover Foto">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Geolocalização do Dispositivo -->
+                <div class="form-group">
+                    <label class="form-label">Localização no Mapa <span class="required">*</span></label>
+                    <button type="button" class="btn btn-outline btn-geo" id="btn-geolocalizacao">
+                        <span class="geo-icon">📍</span> Usar Minha Localização Atual
+                    </button>
+                    <div class="geo-status-text" id="geo-status">Clique no botão acima para capturar o GPS automático.</div>
+                    
+                    <input type="hidden" id="latitude" name="latitude" required>
+                    <input type="hidden" id="longitude" name="longitude" required>
+                </div>
+                <!-- Endereço Informado / Confirmado -->
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label for="rua" class="form-label">Rua / Logradouro <span class="required">*</span></label>
+                        <input type="text" id="rua" name="rua" class="form-input" placeholder="Ex: Rua das Flores" required>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="numero" class="form-label">Número</label>
+                        <input type="text" id="numero" name="numero" class="form-input" placeholder="Ex: 120">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="bairro" class="form-label">Bairro <span class="required">*</span></label>
+                        <input type="text" id="bairro" name="bairro" class="form-input" placeholder="Ex: Centro" required>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="cidade" class="form-label">Cidade / Estado</label>
+                        <input type="text" id="cidade" name="cidade" class="form-input" placeholder="Ex: São Paulo - SP">
+                    </div>
+                </div>
+                <!-- Descrição da Ocorrência -->
+                <div class="form-group">
+                    <label for="descricao" class="form-label">Descrição Detalhada <span class="required">*</span></label>
+                    <textarea id="descricao" name="descricao" class="form-textarea" rows="3" placeholder="Descreva o problema encontrado com o máximo de detalhes útil para a solução..." required></textarea>
+                </div>
+                <!-- Botões de Ação -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="btn-cancelar-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-ocorrencia">
+                        <span>📝</span> Enviar Ocorrência
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Componente Toast de Notificação -->
+    <div class="toast hidden" id="toast-notification">
+        <span class="toast-icon" id="toast-icon">✨</span>
+        <span class="toast-message" id="toast-message">Mensagem de aviso</span>
+    </div>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Firebase SDK (Compat v10) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <!-- Firebase Configuração e JavaScript Principal -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
