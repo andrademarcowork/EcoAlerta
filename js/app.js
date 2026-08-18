@@ -1,6 +1,7 @@
 /* ==========================================================================
    CuidAí Divinésia - Main JavaScript Application Logic
    ========================================================================== */
+
 /**
  * Estado Global da Aplicação
  */
@@ -10,9 +11,11 @@ let userLocationMarker = null;
 let fotoBase64Temp = null;
 let filtroCategoriaAtiva = 'TODOS';
 let filtroStatusAtivo = 'TODOS';
+
 // Coordenadas Padrão do Município de Divinésia - MG
 const DIVINESIA_LAT = -20.9575;
 const DIVINESIA_LNG = -42.9669;
+
 // Mapeamento de Ícones/Emojis por Categoria
 const CATEGORY_ICONS = {
     'Lixo Acumulado': '🗑️',
@@ -25,6 +28,7 @@ const CATEGORY_ICONS = {
     'Poluição': '🏭',
     'Outro': '📍'
 };
+
 // Mapeamento de Classes de Status
 const STATUS_CLASSES = {
     'Registrado': 'marker-status-registrado',
@@ -32,6 +36,7 @@ const STATUS_CLASSES = {
     'Encaminhado': 'marker-status-encaminhado',
     'Resolvido': 'marker-status-resolvido'
 };
+
 // Dados Mock Iniciais para Divinésia - MG
 const INITIAL_MOCK_OCORRENCIAS = [
     {
@@ -77,52 +82,66 @@ const INITIAL_MOCK_OCORRENCIAS = [
         foto: null
     }
 ];
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🏛️ CuidAí Divinésia — Aplicação Inicializada.');
+
     // Inicializa o Mapa Leaflet
     initMap();
+
     // Tenta obter localização atual para centralizar o mapa
     tentarTornarMapaCentradoUsuario();
+
     // Carrega ocorrencias (Nuvem ou Local) e ativa listeners
     iniciarEscutaOcorrencias();
+
     // Configura eventos da interface (Modal, Foto, Formulário, Botões, Filtros)
     setupEventListeners();
 });
+
 /**
  * Inicializa o Mapa Leaflet.js centrado em Divinésia - MG
  */
 function initMap() {
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
+
     map = L.map('map', {
         zoomControl: true,
         scrollWheelZoom: false
     }).setView([DIVINESIA_LAT, DIVINESIA_LNG], 15);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | CuidAí Divinésia'
     }).addTo(map);
 }
+
 /**
  * Solicita a geolocalização do navegador para centralizar o mapa
  */
 function tentarTornarMapaCentradoUsuario() {
     if (!('geolocation' in navigator)) return;
+
     navigator.geolocation.getCurrentPosition(
         (position) => {
             const userLat = position.coords.latitude;
             const userLng = position.coords.longitude;
+
             if (map) {
                 map.setView([userLat, userLng], 15);
+
                 const userIcon = L.divIcon({
                     className: 'custom-leaflet-marker',
                     html: `<div class="user-marker-pulse" title="Sua localização atual"></div>`,
                     iconSize: [24, 24],
                     iconAnchor: [12, 12]
                 });
+
                 if (userLocationMarker) {
                     map.removeLayer(userLocationMarker);
                 }
+
                 userLocationMarker = L.marker([userLat, userLng], { icon: userIcon })
                     .addTo(map)
                     .bindPopup(`
@@ -139,6 +158,7 @@ function tentarTornarMapaCentradoUsuario() {
         { enableHighAccuracy: true, timeout: 8000 }
     );
 }
+
 /**
  * Inicia a escuta das ocorrências em tempo real (Firebase Firestore ou LocalStorage Fallback)
  */
@@ -166,6 +186,7 @@ function iniciarEscutaOcorrencias() {
         carregarLocalFallback();
     }
 }
+
 /**
  * Modo Fallback Local (localStorage)
  */
@@ -183,6 +204,7 @@ function carregarLocalFallback() {
     }
     filtrarERenderizarMarcadores();
 }
+
 function salvarLocal() {
     try {
         localStorage.setItem('ecoalerta_ocorrencias', JSON.stringify(ocorrencias));
@@ -190,44 +212,53 @@ function salvarLocal() {
         console.error('Erro ao salvar no localStorage:', e);
     }
 }
+
 /**
  * Filtra as ocorrências ativas e renderiza apenas os marcadores correspondentes
  */
 function filtrarERenderizarMarcadores() {
     if (!map) return;
+
     map.eachLayer((layer) => {
         if (layer instanceof L.Marker && layer !== userLocationMarker) {
             map.removeLayer(layer);
         }
     });
+
     const ocorrenciasFiltradas = ocorrencias.filter(oc => {
         const matchCategoria = (filtroCategoriaAtiva === 'TODOS') || (oc.tipo === filtroCategoriaAtiva);
         const matchStatus = (filtroStatusAtivo === 'TODOS') || (oc.status === filtroStatusAtivo);
         return matchCategoria && matchStatus;
     });
+
     ocorrenciasFiltradas.forEach(oc => {
         adicionarMarcadorMapa(oc);
     });
+
     const counterText = document.getElementById('filter-counter-text');
     if (counterText) {
         let labelFiltro = filtroCategoriaAtiva !== 'TODOS' ? filtroCategoriaAtiva : (filtroStatusAtivo === 'Resolvido' ? 'Resolvidos' : 'todas as categorias');
         counterText.innerHTML = `Exibindo <strong>${ocorrenciasFiltradas.length}</strong> ocorrência(s) em <em>${escapeHtml(labelFiltro)}</em>`;
     }
 }
+
 /**
  * Adiciona um marcador individual no mapa com ícone personalizado e popup interativo
  */
 function adicionarMarcadorMapa(oc) {
     const emojiIcon = CATEGORY_ICONS[oc.tipo] || '📍';
     const statusClass = STATUS_CLASSES[oc.status] || 'marker-status-registrado';
+
     const customIcon = L.divIcon({
         className: 'custom-leaflet-marker',
         html: `<div class="marker-icon-bubble ${statusClass}">${emojiIcon}</div>`,
         iconSize: [40, 40],
         iconAnchor: [20, 20]
     });
+
     const isResolvido = oc.status === 'Resolvido';
     const statusBadgeClass = isResolvido ? 'color: #10b981;' : 'color: #f59e0b;';
+
     const popupHtml = `
         <div class="popup-card">
             <div class="popup-category">${escapeHtml(oc.tipo)}</div>
@@ -247,10 +278,12 @@ function adicionarMarcadorMapa(oc) {
             </div>
         </div>
     `;
+
     L.marker([oc.lat, oc.lng], { icon: customIcon })
         .addTo(map)
         .bindPopup(popupHtml);
 }
+
 /**
  * Altera o status da ocorrência para Resolvido (Firebase Cloud ou Local)
  */
@@ -276,6 +309,7 @@ window.marcarComoResolvido = async function(id) {
         }
     }
 };
+
 /**
  * Configura listeners da Interface de Usuário
  */
@@ -285,15 +319,18 @@ function setupEventListeners() {
     const navBtnRegistrar = document.getElementById('nav-btn-registrar');
     const btnFecharModal = document.getElementById('btn-fechar-modal');
     const btnCancelarModal = document.getElementById('btn-cancelar-modal');
+
     // Menu Mobile Hamburguer
     const mobileToggle = document.querySelector('.mobile-toggle');
     const navMenu = document.querySelector('.nav');
     const navLinks = document.querySelectorAll('.nav-link');
+
     if (mobileToggle && navMenu) {
         mobileToggle.addEventListener('click', () => {
             mobileToggle.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
+
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileToggle.classList.remove('active');
@@ -301,6 +338,7 @@ function setupEventListeners() {
             });
         });
     }
+
     // Abertura do Modal
     const abrirModal = (e) => {
         if (e) e.preventDefault();
@@ -309,6 +347,7 @@ function setupEventListeners() {
             modal.setAttribute('aria-hidden', 'false');
         }
     };
+
     // Fechamento do Modal
     const fecharModal = () => {
         if (modal) {
@@ -316,34 +355,43 @@ function setupEventListeners() {
             modal.setAttribute('aria-hidden', 'true');
         }
     };
+
     if (btnHeroRegistrar) btnHeroRegistrar.addEventListener('click', abrirModal);
     if (navBtnRegistrar) navBtnRegistrar.addEventListener('click', abrirModal);
     if (btnFecharModal) btnFecharModal.addEventListener('click', fecharModal);
     if (btnCancelarModal) btnCancelarModal.addEventListener('click', fecharModal);
+
     if (modal) {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) fecharModal();
         });
     }
+
     setupMapFilters();
     setupPhotoUpload();
     setupFormGeolocation();
     setupFormSubmission(fecharModal);
 }
+
 /**
  * Configura os botões/chips de filtro do mapa
  */
 function setupMapFilters() {
     const filterContainer = document.getElementById('map-filter-chips');
     if (!filterContainer) return;
+
     filterContainer.addEventListener('click', (e) => {
         const chip = e.target.closest('.filter-chip');
         if (!chip) return;
+
         const categoria = chip.dataset.categoria;
         const status = chip.dataset.status;
+
         const allChips = filterContainer.querySelectorAll('.filter-chip');
         allChips.forEach(c => c.classList.remove('active'));
+
         chip.classList.add('active');
+
         if (status) {
             filtroStatusAtivo = status;
             filtroCategoriaAtiva = 'TODOS';
@@ -351,9 +399,11 @@ function setupMapFilters() {
             filtroCategoriaAtiva = categoria;
             filtroStatusAtivo = 'TODOS';
         }
+
         filtrarERenderizarMarcadores();
     });
 }
+
 /**
  * Trata captura e seleção de foto
  */
@@ -363,14 +413,18 @@ function setupPhotoUpload() {
     const photoPreviewBox = document.getElementById('photo-preview-box');
     const fotoImgPreview = document.getElementById('foto-img-preview');
     const btnRemoverFoto = document.getElementById('btn-remover-foto');
+
     if (!fotoInput) return;
+
     fotoInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
+
         if (file.size > 5 * 1024 * 1024) {
             showToast('⚠️ A imagem deve ter no máximo 5MB.', 'error');
             return;
         }
+
         const reader = new FileReader();
         reader.onload = (event) => {
             fotoBase64Temp = event.target.result;
@@ -380,6 +434,7 @@ function setupPhotoUpload() {
         };
         reader.readAsDataURL(file);
     });
+
     if (btnRemoverFoto) {
         btnRemoverFoto.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -391,6 +446,7 @@ function setupPhotoUpload() {
         });
     }
 }
+
 /**
  * Trata clique no botão de obter geolocalização no formulário com AUTO-PREENCHIMENTO DE ENDEREÇO (Geocodificação Reversa)
  */
@@ -399,38 +455,49 @@ function setupFormGeolocation() {
     const geoStatus = document.getElementById('geo-status');
     const inputLat = document.getElementById('latitude');
     const inputLng = document.getElementById('longitude');
+
     const inputRua = document.getElementById('rua');
     const inputBairro = document.getElementById('bairro');
     const inputCidade = document.getElementById('cidade');
+
     if (!btnGeo) return;
+
     btnGeo.addEventListener('click', () => {
         if (!('geolocation' in navigator)) {
             geoStatus.textContent = '❌ Seu navegador não suporta geolocalização.';
             geoStatus.className = 'geo-status-text error';
             return;
         }
+
         geoStatus.textContent = '⏳ Obtendo coordenadas GPS do seu celular...';
         geoStatus.className = 'geo-status-text';
+
         navigator.geolocation.getCurrentPosition(
             async (pos) => {
                 const lat = pos.coords.latitude;
                 const lng = pos.coords.longitude;
+
                 inputLat.value = lat;
                 inputLng.value = lng;
+
                 geoStatus.textContent = '⏳ GPS capturado! Identificando nome da rua e bairro automaticamente...';
                 geoStatus.className = 'geo-status-text success';
+
                 // Tenta geocodificação reversa gratuita via Nominatim OpenStreetMap
                 try {
                     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
                     const data = await response.json();
+
                     if (data && data.address) {
                         const addr = data.address;
                         const ruaDetectada = addr.road || addr.pedestrian || addr.suburb || addr.neighbourhood || '';
                         const bairroDetectado = addr.neighbourhood || addr.suburb || addr.city_district || 'Divinésia';
                         const cidadeDetectada = addr.city || addr.town || addr.municipality || 'Divinésia';
+
                         if (inputRua && !inputRua.value) inputRua.value = ruaDetectada || 'Localização por GPS';
                         if (inputBairro && !inputBairro.value) inputBairro.value = bairroDetectado || 'Divinésia';
                         if (inputCidade) inputCidade.value = `${cidadeDetectada} - MG`;
+
                         geoStatus.textContent = `✅ GPS & Endereço capturados! (${ruaDetectada ? ruaDetectada : 'Endereço automático'})`;
                     } else {
                         if (inputRua && !inputRua.value) inputRua.value = 'Localização via GPS';
@@ -442,6 +509,7 @@ function setupFormGeolocation() {
                     if (inputBairro && !inputBairro.value) inputBairro.value = 'Divinésia';
                     geoStatus.textContent = `✅ Localização GPS capturada! (Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)})`;
                 }
+
                 showToast('📍 Localização GPS e endereço capturados!', 'success');
             },
             (err) => {
@@ -459,16 +527,20 @@ function setupFormGeolocation() {
         );
     });
 }
+
 /**
  * Trata o envio do formulário de ocorrência
  */
 function setupFormSubmission(fecharModalCallback) {
     const form = document.getElementById('form-ocorrencia');
     if (!form) return;
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const btnSubmit = document.getElementById('btn-submit-ocorrencia');
         if (btnSubmit) btnSubmit.disabled = true;
+
         const tipo = document.getElementById('tipo-problema').value;
         const ruaVal = document.getElementById('rua').value.trim();
         const numero = document.getElementById('numero').value.trim();
@@ -477,17 +549,21 @@ function setupFormSubmission(fecharModalCallback) {
         const descricao = document.getElementById('descricao').value.trim();
         let lat = parseFloat(document.getElementById('latitude').value);
         let lng = parseFloat(document.getElementById('longitude').value);
+
         // Preenchimento automático para não obrigar digitação manual caso o usuário use GPS ou deixe em branco
         const rua = ruaVal || 'Localização por GPS';
         const bairro = bairroVal || 'Divinésia';
         const cidade = cidadeVal || 'Divinésia - MG';
+
         if (isNaN(lat) || isNaN(lng)) {
             const center = map ? map.getCenter() : { lat: DIVINESIA_LAT, lng: DIVINESIA_LNG };
             lat = center.lat + (Math.random() - 0.5) * 0.01;
             lng = center.lng + (Math.random() - 0.5) * 0.01;
         }
+
         const idOcorrencia = 'oc-' + Date.now();
         let fotoFinalUrl = null;
+
         if (fotoBase64Temp) {
             try {
                 fotoFinalUrl = await comprimirImagemParaWeb(fotoBase64Temp, 700, 0.65);
@@ -496,6 +572,7 @@ function setupFormSubmission(fecharModalCallback) {
                 fotoFinalUrl = fotoBase64Temp;
             }
         }
+
         const novaOcorrencia = {
             id: idOcorrencia,
             tipo,
@@ -510,6 +587,7 @@ function setupFormSubmission(fecharModalCallback) {
             data: new Date().toLocaleDateString('pt-BR'),
             foto: fotoFinalUrl
         };
+
         if (typeof isFirebaseActive !== 'undefined' && isFirebaseActive && db) {
             try {
                 await db.collection('ocorrencias').doc(idOcorrencia).set({
@@ -524,9 +602,11 @@ function setupFormSubmission(fecharModalCallback) {
         } else {
             salvarLocalmenteFallback(novaOcorrencia);
         }
+
         if (map) {
             map.setView([lat, lng], 16);
         }
+
         form.reset();
         fotoBase64Temp = null;
         if (btnSubmit) btnSubmit.disabled = false;
@@ -540,9 +620,11 @@ function setupFormSubmission(fecharModalCallback) {
             geoStatus.textContent = 'Ao clicar, o GPS detecta e preenche o endereço sozinho!';
             geoStatus.className = 'geo-status-text';
         }
+
         fecharModalCallback();
     });
 }
+
 function salvarLocalmenteFallback(novaOcorrencia) {
     ocorrencias.unshift(novaOcorrencia);
     salvarLocal();
@@ -551,6 +633,7 @@ function salvarLocalmenteFallback(novaOcorrencia) {
     filtrarERenderizarMarcadores();
     showToast('🎉 Ocorrência registrada com sucesso!', 'success');
 }
+
 /**
  * Exibe notificação flutuante Toast
  */
@@ -558,14 +641,18 @@ function showToast(message, type = 'success') {
     const toast = document.getElementById('toast-notification');
     const toastMsg = document.getElementById('toast-message');
     const toastIcon = document.getElementById('toast-icon');
+
     if (!toast || !toastMsg) return;
+
     toastMsg.textContent = message;
     toastIcon.textContent = type === 'success' ? '🌱' : '⚠️';
     toast.className = `toast ${type}`;
+
     setTimeout(() => {
         toast.className = 'toast hidden';
     }, 4500);
 }
+
 /**
  * Função utilitária para higienizar texto HTML
  */
@@ -578,6 +665,7 @@ function escapeHtml(text) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
 /**
  * Utilitário: Comprime imagem no navegador para um tamanho ultraleve (~40KB-80KB)
  */
@@ -588,15 +676,19 @@ function comprimirImagemParaWeb(base64Str, maxWidth = 700, quality = 0.65) {
         img.onload = () => {
             let width = img.width;
             let height = img.height;
+
             if (width > maxWidth) {
                 height = Math.round((height * maxWidth) / width);
                 width = maxWidth;
             }
+
             const canvas = document.createElement('canvas');
             canvas.width = width;
             canvas.height = height;
+
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
+
             const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
             resolve(compressedBase64);
         };
