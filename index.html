@@ -47,6 +47,7 @@
             </button>
         </div>
     </header>
+
     <main>
         <!-- Seção Principal / Hero -->
         <section class="hero" id="hero">
@@ -96,6 +97,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Seção Como Funciona -->
         <section class="section como-funciona" id="como-funciona">
             <div class="container">
@@ -112,6 +114,7 @@
                             <p>Identifique lixo acumulado, vazamentos, bueiros entupidos ou riscos ambientais na cidade.</p>
                         </div>
                     </div>
+
                     <div class="step-card">
                         <div class="step-icon">2</div>
                         <div class="step-content">
@@ -119,6 +122,7 @@
                             <p>Tire uma foto e clique em "Usar Minha Localização". O sistema detecta o endereço por GPS sem você digitar nada!</p>
                         </div>
                     </div>
+
                     <div class="step-card">
                         <div class="step-icon">3</div>
                         <div class="step-content">
@@ -129,6 +133,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Seção Tipos de Problemas -->
         <section class="section categorias" id="categorias">
             <div class="container">
@@ -136,42 +141,50 @@
                     <h2 class="section-title">Tipos de Ocorrências</h2>
                     <p class="section-subtitle">Categorias de problemas que podem ser registrados no CuidAí Divinésia</p>
                 </div>
+
                 <div class="categories-grid">
                     <div class="category-card">
                         <div class="category-icon">🗑️</div>
                         <h3>Lixo Acumulado</h3>
                         <p>Descarte inadequado de resíduos sólidos e entulhos em vias públicas.</p>
                     </div>
+
                     <div class="category-card">
                         <div class="category-icon">💧</div>
                         <h3>Vazamento de Água</h3>
                         <p>Vazamentos em tubulações, redes de água potável ou esgoto.</p>
                     </div>
+
                     <div class="category-card">
                         <div class="category-icon">🕳️</div>
                         <h3>Bueiros Entupidos</h3>
                         <p>Bueiros obstruídos com risco de causar alagamentos nas chuvas.</p>
                     </div>
+
                     <div class="category-card">
                         <div class="category-icon">🌊</div>
                         <h3>Alagamentos</h3>
                         <p>Pontos de acúmulo severo de água de chuva ou transbordamento.</p>
                     </div>
+
                     <div class="category-card">
                         <div class="category-icon">⛰️</div>
                         <h3>Erosão e Deslizamento</h3>
                         <p>Barrancos cedendo, risco de encostas e erosão no solo.</p>
                     </div>
+
                     <div class="category-card">
                         <div class="category-icon">🌳</div>
                         <h3>Árvores em Risco</h3>
                         <p>Árvores caídas, galhos caídos ou risco de queda em fiação.</p>
                     </div>
+
                     <div class="category-card">
                         <div class="category-icon">🔥</div>
                         <h3>Queimadas</h3>
                         <p>Focos de incêndio em vegetações ou terrenos baldios.</p>
                     </div>
+
                     <div class="category-card">
                         <div class="category-icon">🏭</div>
                         <h3>Poluição</h3>
@@ -180,6 +193,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Seção do Mapa -->
         <section class="section mapa-section" id="mapa-section">
             <div class="container">
@@ -187,6 +201,7 @@
                     <h2 class="section-title">Mapa de Divinésia</h2>
                     <p class="section-subtitle">Explore as ocorrências reportadas no município em tempo real</p>
                 </div>
+
                 <div class="map-wrapper glass-card">
                     <!-- Barra de Filtros por Categoria e Status -->
                     <div class="map-filter-container">
@@ -207,6 +222,7 @@
                             <button class="filter-chip filter-chip-status" data-status="Resolvido">🟢 Apenas Resolvidos</button>
                         </div>
                     </div>
+
                     <div id="map" class="map-container"></div>
                     <div class="map-legend">
                         <div class="legend-item"><span class="badge-dot dot-registrado"></span> Registrado</div>
@@ -217,6 +233,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Seção Sobre o Projeto -->
         <section class="section sobre" id="sobre">
             <div class="container">
@@ -251,6 +268,7 @@
             </div>
         </section>
     </main>
+
     <!-- Rodapé -->
     <footer class="footer">
         <div class="container footer-container">
@@ -275,6 +293,7 @@
             </div>
         </div>
     </footer>
+
     <!-- Modal de Registro de Ocorrência -->
     <div class="modal-overlay" id="modal-registro" aria-hidden="true">
         <div class="modal-container glass-card">
@@ -303,6 +322,7 @@
                         <option value="Outro">📍 Outro Problema Urbano/Ambiental</option>
                     </select>
                 </div>
+
                 <!-- Capture / Upload de Fotografia -->
                 <div class="form-group">
                     <label class="form-label">Fotografia do Problema</label>
@@ -319,6 +339,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Geolocalização do Dispositivo -->
                 <div class="form-group">
                     <label class="form-label">Localização GPS / Endereço</label>
@@ -330,6 +351,7 @@
                     <input type="hidden" id="latitude" name="latitude">
                     <input type="hidden" id="longitude" name="longitude">
                 </div>
+
                 <!-- Endereço Informado / Auto-preenchido por GPS (Campos Não Obrigatórios) -->
                 <div class="form-row">
                     <div class="form-group flex-2">
@@ -341,6 +363,7 @@
                         <input type="text" id="numero" name="numero" class="form-input" placeholder="Ex: 120">
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group flex-1">
                         <label for="bairro" class="form-label">Bairro <span class="optional-hint">(Auto-preenchido pelo GPS)</span></label>
@@ -351,11 +374,13 @@
                         <input type="text" id="cidade" name="cidade" class="form-input" value="Divinésia - MG" placeholder="Divinésia - MG">
                     </div>
                 </div>
+
                 <!-- Descrição da Ocorrência -->
                 <div class="form-group">
                     <label for="descricao" class="form-label">Descrição Detalhada <span class="required">*</span></label>
                     <textarea id="descricao" name="descricao" class="form-textarea" rows="3" placeholder="Descreva brevemente o problema encontrado..." required></textarea>
                 </div>
+
                 <!-- Botões de Ação -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline" id="btn-cancelar-modal">Cancelar</button>
@@ -366,11 +391,13 @@
             </form>
         </div>
     </div>
+
     <!-- Componente Toast de Notificação -->
     <div class="toast hidden" id="toast-notification">
         <span class="toast-icon" id="toast-icon">✨</span>
         <span class="toast-message" id="toast-message">Mensagem de aviso</span>
     </div>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
@@ -378,6 +405,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
     <!-- Firebase Configuração e JavaScript Principal -->
     <script src="js/firebase-config.js"></script>
     <script src="js/app.js"></script>
